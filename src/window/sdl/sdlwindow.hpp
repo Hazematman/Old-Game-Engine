@@ -13,7 +13,10 @@ class SDLWindow : public Window {
 
     void setResolution(int width, int height);
     void getResolution(int &width, int &height);
+    void setTitle(const std::string title);
     void display();
+
+    SDL_Window *getHandle();
   private:
     SDL_Window *screen;
     SDL_GLContext context;

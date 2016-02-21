@@ -11,6 +11,7 @@ class Window {
 
     virtual void setResolution(int width, int height) = 0;
     virtual void getResolution(int &width, int &height) = 0;
+    virtual void setTitle(const std::string title) = 0;
     virtual void display() = 0;
 };
 

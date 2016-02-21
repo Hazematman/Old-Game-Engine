@@ -44,7 +44,6 @@ SDLWindow::SDLWindow(const string &title) {
   // Set any values initally
   width = DEFAULT_WIDTH;
   height = DEFAULT_HEIGHT;
-	
 }
 
 SDLWindow::~SDLWindow() {
@@ -62,8 +61,16 @@ void SDLWindow::getResolution(int &width, int &height) {
   height = this->height;
 }
 
+void SDLWindow::setTitle(const string title) {
+  SDL_SetWindowTitle(screen, title.c_str());
+}
+
 void SDLWindow::display() {
   SDL_GL_SwapWindow(screen);
+}
+
+SDL_Window *SDLWindow::getHandle() {
+  return screen;
 }
 
 void SDLWindow::checkSDLError() {
