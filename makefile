@@ -1,7 +1,7 @@
 SRCEXT = cpp
 CXX = g++
 CXXFLAGS := -Wall -std=c++11 -g
-LFLAGS =
+LFLAGS = -lSDL2
 SOURCEDIR = src
 SOURCEDIRS = $(shell find $(SOURCEDIR) -type d)
 INCLUDEDIR = $(SOURCEDIR)
