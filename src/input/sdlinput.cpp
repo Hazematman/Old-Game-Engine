@@ -31,9 +31,9 @@ void SDLInput::processInput() {
         addInput(string(e.text.text));
         break;
       case SDL_KEYDOWN:
-        if(KeyDownCallback) {
+        if(keyDownCallback) {
           string key = SDL_GetKeyName(e.key.keysym.sym);
-          KeyDownCallback(key);
+          keyDownCallback(key);
         }
         switch(e.key.keysym.sym) {
           case SDLK_BACKSPACE:
@@ -69,11 +69,11 @@ void SDLInput::processInput() {
 }
 
 void SDLInput::setKeyDownCallback(function<void(string&)> callback) {
-  keyUpCallback = callback;
+  keyDownCallback = callback;
 }
 
 void SDLInput::setKeyUpCallback(function<void(string&)> callback) {
-  KeyDownCallback = callback;
+  keyUpCallback = callback;
 }
 
 void SDLInput::setMouseMovedCallback(function<void(int,int,int,int)> callback) {

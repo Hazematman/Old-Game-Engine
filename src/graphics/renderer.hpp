@@ -19,8 +19,8 @@ class Renderer {
     /* Allocate a texture object from image data
      */
     virtual Texture *createTexture(Image &image) = 0;
-    
-    virtual void drawBox(Box &box);
+    virtual void drawBox(Box &box) = 0;
+    virtual void setRenderDimensions(int width, int height) = 0;
 };
 
 #endif

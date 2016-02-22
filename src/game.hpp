@@ -1,8 +1,9 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 #include <memory>
-#include "window/sdl/sdlwindow.hpp"
+#include "window/window.hpp"
 #include "input/sdlinput.hpp"
+#include "graphics/renderer.hpp"
 
 /* Struct to representing the current settings
  * of the engine.
@@ -27,6 +28,7 @@ class Game {
     Settings settings;
     bool running;
     std::unique_ptr<Window> window;
+    std::unique_ptr<Renderer> renderer;
     std::unique_ptr<SDLInput> input;
 };
 

@@ -52,7 +52,7 @@ class SDLInput {
     bool gui;
     std::string input;
     std::function<void(std::string&)> keyUpCallback;
-    std::function<void(std::string&)> KeyDownCallback;
+    std::function<void(std::string&)> keyDownCallback;
     std::function<void(int,int,int,int)> mouseMovedCallback;
     std::function<void(MouseButton,int,int)> mouseButtonUpCallback;
     std::function<void(MouseButton,int,int)> mouseButtonDownCallback;

@@ -1,5 +1,7 @@
 #include <iostream>
 #include "game.hpp"
+#include "window/sdl/sdlwindow.hpp"
+#include "graphics/gl/glrenderer.hpp"
 #include "error.hpp"
 using namespace std;
 
@@ -17,6 +19,7 @@ void keyDown(string &key) {
 
 Game::Game() : 
   window(new SDLWindow(DEFAULT_WINDOW_TITLE)),
+  renderer(new GLRenderer),
   input(new SDLInput)
 {
   running = true;
