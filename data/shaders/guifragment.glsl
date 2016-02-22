@@ -3,11 +3,11 @@
 smooth in vec2 uv;
 out vec4 outColour;
 
-uniform sampler2D inTexture;
+uniform sampler2D tex;
 uniform vec4 colour;
 
 void main(){
-	vec4 texColour = texture2D(inTexture,vec2(uv.x,-uv.y));
+	vec4 texColour = texture(tex,vec2(uv.x,-uv.y));
 	outColour.rgb = colour.rgb + texColour.rgb;
 	if(colour.a <= texColour.a)
 		outColour.a = colour.a;

@@ -1,5 +1,10 @@
 #include "image.hpp"
 
+Image::Image(int width, int height, uint8_t *data) :
+  width(width), height(height), data(data)
+{
+}
+
 int Image::getWidth() {
   return width;
 }

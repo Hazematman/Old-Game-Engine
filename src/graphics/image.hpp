@@ -9,6 +9,7 @@
  */
 class Image {
   public:
+    Image(int width, int height, uint8_t *data);
     int getWidth();
     int getHeight();
     uint8_t *getData();

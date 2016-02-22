@@ -7,6 +7,8 @@ using namespace std;
 #define SHADER_ERROR "Shader Error"
 
 ShaderProgram::ShaderProgram(const string &vertex, const string &fragment) {
+  vertexFile = vertex;
+  fragmentFile = fragment;
   vertexShader = compileShader(vertex, gl::VERTEX_SHADER);
   fragmentShader = compileShader(fragment, gl::FRAGMENT_SHADER);
 
@@ -28,6 +30,20 @@ ShaderProgram::~ShaderProgram() {
   gl::DeleteShader(vertexShader);
   gl::DeleteShader(fragmentShader);
   gl::DeleteProgram(programID);
+}
+
+GLuint ShaderProgram::getID() {
+  return programID;
+}
+
+GLint ShaderProgram::getUniform(const string &name) {
+  GLint location = gl::GetUniformLocation(programID, name.c_str());
+  if(location == -1) {
+    throw Error(SHADER_ERROR, 
+        vertexFile+" "+fragmentFile+":\nCan't find uniform: "+name);
+  }
+
+  return location;
 }
 
 GLuint ShaderProgram::compileShader(const string &file, GLenum type) {

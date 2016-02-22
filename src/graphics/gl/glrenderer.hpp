@@ -3,6 +3,10 @@
 #include "../renderer.hpp"
 #include "glshader.hpp"
 
+struct GuiUniforms {
+  GLint pos,scale,tex,colour;
+};
+
 class GLRenderer : public Renderer {
   public:
     GLRenderer();
@@ -14,8 +18,15 @@ class GLRenderer : public Renderer {
     Texture *createTexture(Image &image);
     void drawBox(Box &box);
     void setRenderDimensions(int width, int height);
+    void clearColour();
+    void clearDepth();
   private:
     std::unique_ptr<ShaderProgram> guiShader;
+    glm::vec2 dimensions;
+    GLuint currentProgram;
+    GLuint quadVBO;
+    GLuint quadVAO;
+    GuiUniforms guiUniforms;
 };
 
 #endif

@@ -30,14 +30,21 @@ Game::Game() :
 
   input->setMouseButtonDownCallback(buttonDown);
   input->setKeyDownCallback(keyDown);
+
+  renderer->setRenderDimensions(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 }
 
 void Game::run() {
+  Box box(renderer->getBlankTexture(), glm::vec2(100,100),glm::vec2(100,100),glm::vec4(1.0,1.0,1.0,1.0));
   while(running) {
     input->processInput();
     if(input->getQuit()) {
       running = false;
     }
+
+    renderer->clearColour();
+    renderer->clearDepth();
+    renderer->drawBox(box);
 
     window->display();
   }
