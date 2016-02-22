@@ -32,6 +32,7 @@ class SDLInput {
     void setMouseMovedCallback(std::function<void(int,int,int,int)> callback);
     void setMouseButtonUpCallback(std::function<void(MouseButton,int,int)> callback);
     void setMouseButtonDownCallback(std::function<void(MouseButton,int,int)> callback);
+    void setResizeCallback(std::function<void(int,int)> callback);
     
     /* Functions for checking input.
      * Can use guilock state for input locking when
@@ -56,6 +57,7 @@ class SDLInput {
     std::function<void(int,int,int,int)> mouseMovedCallback;
     std::function<void(MouseButton,int,int)> mouseButtonUpCallback;
     std::function<void(MouseButton,int,int)> mouseButtonDownCallback;
+    std::function<void(int,int)> resizeCallback;
 
     void addInput(std::string newInput);
 };

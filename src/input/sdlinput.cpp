@@ -25,6 +25,11 @@ void SDLInput::processInput() {
           case SDL_WINDOWEVENT_FOCUS_LOST:
             focus = false;
             break;
+          case SDL_WINDOWEVENT_RESIZED:
+            if(resizeCallback) {
+              resizeCallback(e.window.data1, e.window.data2);
+            }
+            break;
         }
         break;
       case SDL_TEXTINPUT:
@@ -86,6 +91,10 @@ void SDLInput::setMouseButtonUpCallback(function<void(MouseButton,int,int)> call
 
 void SDLInput::setMouseButtonDownCallback(function<void(MouseButton,int,int)> callback) {
   mouseButtonDownCallback = callback;
+}
+
+void SDLInput::setResizeCallback(function<void(int,int)> callback) {
+  resizeCallback = callback;
 }
 
 void SDLInput::setGUILock(bool gui) {

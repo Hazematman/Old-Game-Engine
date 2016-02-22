@@ -16,13 +16,16 @@ RCOMPILE_FLAGS = -D NDEBUG
 # Additional debug-specific flags
 DCOMPILE_FLAGS = -D DEBUG
 # Add additional include paths
-INCLUDES = -I $(SRC_PATH)/
+INCLUDES = -I $(SRC_PATH)/ -I ./wren/src/include
 # General linker settings
 LINK_FLAGS = -lSDL2 -lGL
 # Additional release-specific linker settings
 RLINK_FLAGS =
 # Additional debug-specific linker settings
 DLINK_FLAGS =
+# Static Libraries
+STATIC_LIBS_DIR = -L wren/lib
+STATIC_LIBS_FLAGS = -l:libwren.a
 # Destination directory, like a jail or mounted system
 DESTDIR = /
 # Install path (bin/ is appended automatically)
@@ -191,6 +194,8 @@ clean:
 	@echo "Deleting directories"
 	@$(RM) -r build
 	@$(RM) -r bin
+	@echo "Clearing libwren"
+	$(MAKE) -C wren clean
 
 # Main rule, checks the executable and symlinks to the output
 all: $(BIN_PATH)/$(BIN_NAME)
@@ -199,10 +204,11 @@ all: $(BIN_PATH)/$(BIN_NAME)
 	@ln -s $(BIN_PATH)/$(BIN_NAME) $(BIN_NAME)
 
 # Link the executable
-$(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
+$(BIN_PATH)/$(BIN_NAME): $(OBJECTS) ./wren/lib/libwren.a
 	@echo "Linking: $@"
+	@echo $(CMD_PREFIX)$(CXX) $(OBJECTS) $(STATIC_LIBS_DIR) $(LDFLAGS) $(STATIC_LIBS_FLAGS) -o $@
 	@$(START_TIME)
-	$(CMD_PREFIX)$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CMD_PREFIX)$(CXX) $(OBJECTS) $(STATIC_LIBS_DIR) $(LDFLAGS) $(STATIC_LIBS_FLAGS) -o $@
 	@echo -en "\t Link time: "
 	@$(END_TIME)
 
@@ -218,3 +224,8 @@ $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
 	$(CMD_PREFIX)$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
 	@echo -en "\t Compile time: "
 	@$(END_TIME)
+
+# build libwren
+wren/lib/libwren.a:
+	@echo "Building libwren"
+	$(MAKE) -C wren release
