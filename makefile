@@ -206,7 +206,6 @@ all: $(BIN_PATH)/$(BIN_NAME)
 # Link the executable
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS) ./wren/lib/libwren.a
 	@echo "Linking: $@"
-	@echo $(CMD_PREFIX)$(CXX) $(OBJECTS) $(STATIC_LIBS_DIR) $(LDFLAGS) $(STATIC_LIBS_FLAGS) -o $@
 	@$(START_TIME)
 	$(CMD_PREFIX)$(CXX) $(OBJECTS) $(STATIC_LIBS_DIR) $(LDFLAGS) $(STATIC_LIBS_FLAGS) -o $@
 	@echo -en "\t Link time: "

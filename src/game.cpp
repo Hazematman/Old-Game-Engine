@@ -4,6 +4,7 @@
 #include "game.hpp"
 #include "window/sdl/sdlwindow.hpp"
 #include "graphics/gl/glrenderer.hpp"
+#include "binding/binding.hpp"
 #include "error.hpp"
 using namespace std;
 
@@ -17,33 +18,6 @@ void buttonDown(MouseButton button, int x, int y) {
 
 void keyDown(string &key) {
   cout << key << endl;
-}
-
-static char *loadFile(const char *name) {
-  string path = "./data/scripts/" + string(name);
-  FILE *f = fopen(path.c_str(), "r");
-  if(f == nullptr) {
-    return nullptr;
-  }
-  fseek(f,0,SEEK_END);
-  long fileSize = ftell(f);
-  fseek(f,0,SEEK_SET);
-
-  char *data = (char*)malloc(fileSize+1);
-  fread(data,fileSize,1,f);
-  fclose(f);
-
-  data[fileSize] = 0;
-
-  return data;
-}
-
-static char *loadModule(WrenVM *vm, const char *name) {
-  return loadFile(name);
-}
-
-static void logText(WrenVM *vm, const char *text) {
-  cout << text;
 }
 
 Game::Game() : 
@@ -99,10 +73,5 @@ void Game::initWren() {
   config.writeFn = logText;
   vm = wrenNewVM(&config);
 
-  char *initData = loadFile("core.wren");
-  if(initData == nullptr) {
-    throw Error("Wren Init", "Could not open core.wren");
-  }
-  wrenInterpret(vm, initData);
-  free(initData);
+  wrenInterpret(vm, "import \"core\"");
 }
