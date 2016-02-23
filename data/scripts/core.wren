@@ -1,2 +1,2 @@
-System.print("Hello World!")
-System.print("Whats up?")
+import "game" for Game
+
