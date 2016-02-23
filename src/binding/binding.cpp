@@ -120,18 +120,18 @@ void callRun(float dt) {
   wrenCall(vm, game.run);
 }
 
-void setLogFunction(std::function<void(std::string)> callback) {
+void setLogFunction(function<void(string)> callback) {
   logFunction = callback;
 }
 
-void keyUpCallback(std::string &key) {
+void keyUpCallback(string &key) {
   wrenEnsureSlots(vm, 2);
   wrenSetSlotValue(vm, 0, game.game);
   wrenSetSlotString(vm, 1, key.c_str());
   wrenCall(vm, game.onKeyUp);
 }
 
-void keyDownCallback(std::string &key) {
+void keyDownCallback(string &key) {
   wrenEnsureSlots(vm, 2);
   wrenSetSlotValue(vm, 0, game.game);
   wrenSetSlotString(vm, 1, key.c_str());
