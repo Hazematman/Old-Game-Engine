@@ -10,6 +10,6 @@ It supports scripting through the wren scripting language.
 
 
 ## Credits ##
-Scripting VM - [Wren](http://wren.io/)
-JSON parser - [json.hpp](https://github.com/nlohmann/json)
+- Scripting VM - [Wren](http://wren.io/)
+- JSON parser - [json.hpp](https://github.com/nlohmann/json)
 
