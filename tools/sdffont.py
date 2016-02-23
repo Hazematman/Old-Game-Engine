@@ -41,6 +41,11 @@ def createBitmapFont(size,padding,font):
 def distance(x1,y1,x2,y2):
     return math.sqrt((x1-x2)**2 + (y1-y2)**2)
 
+def remap(value, oldmin, oldmax, newmin, newmax):
+    oldRange = oldmax - oldmin
+    newRange = newmax - newmin
+    return (((value-oldmin)*newRange)/oldRange)+newmin
+
 def getSDF(bitmap, spread):
     sdf = pygame.Surface((bitmap.get_width(),bitmap.get_height()))
     bitmappx = pygame.PixelArray(bitmap)
@@ -48,6 +53,12 @@ def getSDF(bitmap, spread):
     maxdist = math.sqrt(spread**2 + spread**2)
     for y in range(sdf.get_height()):
         for x in range(sdf.get_width()):
+            negate = 1
+            if bitmappx[x,y] == bitmap.map_rgb((0,0,0)):
+                target = bitmap.map_rgb((255,255,255))
+                negate = -1
+            else:
+                target = bitmap.map_rgb((0,0,0))
             closest = maxdist
             for yy in range(y-int(spread),y+int(spread)):
                 for xx in range(x-int(spread),x+int(spread)):
@@ -55,11 +66,12 @@ def getSDF(bitmap, spread):
                         continue
                     if(yy < 0 or yy >= sdf.get_height()):
                         continue
-                    if bitmappx[xx,yy] == bitmap.map_rgb((255,255,255)):
+                    if bitmappx[xx,yy] == target:
                         dist = distance(x,y,xx,yy)
                         if dist < closest:
                             closest = dist
-            closest = (255 - (closest/maxdist)*255)
+
+            closest = remap(closest*negate, -maxdist, maxdist, 0, 255) 
             sdfpx[x,y] = (closest,closest,closest)
                     
 
