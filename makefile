@@ -16,7 +16,7 @@ RCOMPILE_FLAGS = -D NDEBUG
 # Additional debug-specific flags
 DCOMPILE_FLAGS = -D DEBUG
 # Add additional include paths
-INCLUDES = -I $(SRC_PATH)/ -I ./wren/src/include
+INCLUDES = -I $(SRC_PATH)/ -I ./wren/src/include -I ./json/src
 # General linker settings
 LINK_FLAGS = -lSDL2 -lGL
 # Additional release-specific linker settings

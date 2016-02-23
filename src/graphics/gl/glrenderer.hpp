@@ -17,6 +17,7 @@ class GLRenderer : public Renderer {
      */
     Texture *createTexture(Image &image);
     void drawBox(Box &box);
+    void drawString(Font &font, const std::string &text);
     void setRenderDimensions(int width, int height);
     void clearColour();
     void clearDepth();

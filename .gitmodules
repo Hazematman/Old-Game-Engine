@@ -1,3 +1,6 @@
 [submodule "wren"]
 	path = wren
 	url = https://github.com/munificent/wren
+[submodule "json"]
+	path = json
+	url = https://github.com/nlohmann/json
