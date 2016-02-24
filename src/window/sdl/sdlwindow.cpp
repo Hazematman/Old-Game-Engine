@@ -1,3 +1,4 @@
+#include <SDL2/SDL_image.h>
 #include "sdlwindow.hpp"
 using namespace std;
 
@@ -17,6 +18,12 @@ SDLWindow::SDLWindow(const string &title) {
     throw Error(ERROR_TYPE, "Could not initalize SDL");
   }
   checkSDLError();
+
+  // Init SDL_Image for image loading
+  int flags = IMG_INIT_JPG | IMG_INIT_PNG;
+  if((IMG_Init(flags)&flags) != flags) {
+    throw Error(ERROR_TYPE, IMG_GetError());
+  }
 
   // Initalize OpengGL stuff for the window
   // TODO find a way to abstract this to support vulkan

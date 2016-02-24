@@ -14,7 +14,8 @@ using namespace std;
 Game::Game() : 
   window(new SDLWindow(DEFAULT_WINDOW_TITLE)),
   renderer(new GLRenderer),
-  input(new SDLInput)
+  input(new SDLInput),
+  loader(renderer)
 {
   running = true;
 
@@ -43,6 +44,7 @@ Game::~Game() {
 
 void Game::run() {
   Box box(renderer->getBlankTexture(), glm::vec2(100,100),glm::vec2(100,100),glm::vec4(1.0,0.0,0.0,1.0));
+  shared_ptr<Font> f = loader.loadFont("defaultfont.fnt");
   while(running) {
     input->processInput();
     if(input->getQuit()) {

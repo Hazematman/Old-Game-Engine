@@ -4,6 +4,7 @@
 #include "window/window.hpp"
 #include "input/sdlinput.hpp"
 #include "graphics/renderer.hpp"
+#include "loader/loader.hpp"
 // Need extern c to link in c++
 
 /* Struct to representing the current settings
@@ -30,8 +31,9 @@ class Game {
     Settings settings;
     bool running;
     std::unique_ptr<Window> window;
-    std::unique_ptr<Renderer> renderer;
+    std::shared_ptr<Renderer> renderer;
     std::unique_ptr<SDLInput> input;
+    Loader loader;
 
     void windowResize(int width, int height);
 };

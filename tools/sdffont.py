@@ -79,7 +79,7 @@ def getSDF(bitmap, spread):
 
 def save(img, name, width, height, pad, spread):
     pygame.image.save(img, name+".png")
-    data = {'texture':name+".png", 'charWidth':width, 'charheight':height,
+    data = {'texture':name+".png", 'charWidth':width, 'charHeight':height,
             'padding':pad, 'spread':spread}
     with open(name+".fnt", "w") as outfile:
         json.dump(data, outfile, indent=4)

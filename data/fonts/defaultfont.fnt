@@ -1,0 +1,7 @@
+{
+    "charWidth": 31,
+    "charHeight": 45,
+    "texture": "defaultfont.png",
+    "spread": 8.0,
+    "padding": 8
+}

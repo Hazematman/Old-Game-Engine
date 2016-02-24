@@ -9,14 +9,21 @@
  */
 class Image {
   public:
-    Image(int width, int height, uint8_t *data);
+    enum Format {
+      RGBA,
+      RGB,
+      MONO,
+    };
+    Image(int width, int height, uint8_t *data, Format format);
     int getWidth();
     int getHeight();
     uint8_t *getData();
+    Format getFormat();
   private:
     int width;
     int height;
     uint8_t *data;
+    Format format;
 };
 
 #endif

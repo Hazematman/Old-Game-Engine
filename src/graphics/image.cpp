@@ -1,7 +1,7 @@
 #include "image.hpp"
 
-Image::Image(int width, int height, uint8_t *data) :
-  width(width), height(height), data(data)
+Image::Image(int width, int height, uint8_t *data, Format format) :
+  width(width), height(height), data(data), format(format)
 {
 }
 
@@ -15,4 +15,8 @@ int Image::getHeight() {
 
 uint8_t *Image::getData() {
   return data;
+}
+
+Image::Format Image::getFormat() {
+  return format;
 }

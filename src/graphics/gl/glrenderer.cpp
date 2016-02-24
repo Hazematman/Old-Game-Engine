@@ -8,8 +8,13 @@ using namespace std;
 
 #define GL_ERROR_STRING "GL ERROR"
 
-static uint8_t black[] = {0,0,0,255};
-static Image blankImage(1, 1, &black[0]);
+static uint8_t black[] = {0,0,0};
+static Image blankImage(1, 1, &black[0], Image::Format::RGB);
+static GLenum formats[] = {
+  gl::RGBA,
+  gl::RGB,
+  gl::RED,
+};
 
 static const float quadVerts[] = {
   -1, -1,
@@ -116,6 +121,9 @@ void GLRenderer::drawBox(Box &box) {
   gl::DrawArrays(gl::TRIANGLES, 0, 6);
 }
 
+void GLRenderer::drawString(Font &font, const string &text) {
+}
+
 Texture *GLRenderer::createTexture(Image &image) {
   GLuint textureId;
   gl::GenTextures(1, &textureId);
@@ -124,11 +132,11 @@ Texture *GLRenderer::createTexture(Image &image) {
   gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
   gl::TexImage2D(gl::TEXTURE_2D,
       0,
-      gl::RGBA,
+      formats[image.getFormat()],
       image.getWidth(),
       image.getHeight(),
       0,
-      gl::RGBA,
+      formats[image.getFormat()],
       gl::UNSIGNED_BYTE,
       image.getData());
 
