@@ -22,6 +22,7 @@ class Renderer {
     virtual void drawBox(Box &box) = 0;
     virtual void drawString(Font &font, Text &text, glm::vec2 pos) = 0;
     virtual void setRenderDimensions(int width, int height) = 0;
+    virtual void setDepthTest(bool doDepthTest) = 0;
     virtual void clearColour() = 0;
     virtual void clearDepth() = 0;
     std::shared_ptr<Texture> getBlankTexture();

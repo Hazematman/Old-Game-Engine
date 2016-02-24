@@ -58,8 +58,10 @@ void Game::run() {
 
     renderer->clearColour();
     renderer->clearDepth();
+
+    renderer->setDepthTest(false);
     renderer->drawBox(box);
-    renderer->drawString(*f, t, glm::vec2(0,0));
+    renderer->drawString(*f, t, glm::vec2(10,10));
 
     window->display();
   }

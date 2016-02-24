@@ -37,8 +37,7 @@ GLRenderer::GLRenderer() {
   // Set inital GL settings
   gl::Enable(gl::BLEND);
   gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
-  //gl::Enable(gl::DEPTH_TEST);
-  //gl::DepthFunc(gl::LESS);
+  gl::DepthFunc(gl::LESS);
   //gl::Enable(gl::CULL_FACE);
   //gl::CullFace(gl::BACK);
   gl::ClearColor(0.0, 0.0, 0.0, 1.0);
@@ -86,6 +85,14 @@ void GLRenderer::setRenderDimensions(int width, int height) {
   gl::Viewport(0, 0, width, height);
   dimensions.x = width;
   dimensions.y = height;
+}
+
+void GLRenderer::setDepthTest(bool doDepthTest) {
+  if(doDepthTest) {
+    gl::Enable(gl::DEPTH_TEST);
+  } else {
+    gl::Disable(gl::DEPTH_TEST);
+  }
 }
 
 void GLRenderer::clearColour() {

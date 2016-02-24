@@ -23,6 +23,7 @@ class GLRenderer : public Renderer {
     void drawBox(Box &box);
     void drawString(Font &font, Text &text, glm::vec2 pos);
     void setRenderDimensions(int width, int height);
+    void setDepthTest(bool doDepthTest);
     void clearColour();
     void clearDepth();
   private:
