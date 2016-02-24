@@ -1,7 +1,7 @@
 {
-    "charWidth": 31,
-    "charHeight": 45,
-    "texture": "defaultfont.png",
+    "charWidth": 36,
+    "padding": 8,
     "spread": 8.0,
-    "padding": 8
+    "texture": "defaultfont.png",
+    "charHeight": 54
 }

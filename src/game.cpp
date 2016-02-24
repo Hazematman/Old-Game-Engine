@@ -61,7 +61,7 @@ void Game::run() {
 
     renderer->setDepthTest(false);
     renderer->drawBox(box);
-    renderer->drawString(*f, t, glm::vec2(10,10));
+    renderer->drawString(*f, t, glm::vec2(0,10));
 
     window->display();
   }
