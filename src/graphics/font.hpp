@@ -2,6 +2,7 @@
 #define FONT_HPP
 #include <string>
 #include <memory>
+#include <glm/glm.hpp>
 #include "texture.hpp"
 
 class Font {
@@ -19,6 +20,11 @@ class Font {
     std::shared_ptr<Texture> texture;
     float spread;
     int padding;
+};
+
+struct Text {
+  std::string text;
+  glm::vec4 colour;
 };
 
 #endif

@@ -20,7 +20,7 @@ class Renderer {
      */
     virtual Texture *createTexture(Image &image) = 0;
     virtual void drawBox(Box &box) = 0;
-    virtual void drawString(Font &font, const std::string &text) = 0;
+    virtual void drawString(Font &font, Text &text, glm::vec2 pos) = 0;
     virtual void setRenderDimensions(int width, int height) = 0;
     virtual void clearColour() = 0;
     virtual void clearDepth() = 0;

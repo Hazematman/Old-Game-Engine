@@ -37,8 +37,8 @@ GLRenderer::GLRenderer() {
   // Set inital GL settings
   gl::Enable(gl::BLEND);
   gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
-  gl::Enable(gl::DEPTH_TEST);
-  gl::DepthFunc(gl::LESS);
+  //gl::Enable(gl::DEPTH_TEST);
+  //gl::DepthFunc(gl::LESS);
   //gl::Enable(gl::CULL_FACE);
   //gl::CullFace(gl::BACK);
   gl::ClearColor(0.0, 0.0, 0.0, 1.0);
@@ -48,6 +48,7 @@ GLRenderer::GLRenderer() {
 
   // Create shader objects
   guiShader.reset(new ShaderProgram("./data/shaders/guivertex.glsl", "./data/shaders/guifragment.glsl"));
+  sdfShader.reset(new ShaderProgram("./data/shaders/sdftextvertex.glsl", "./data/shaders/sdftextfragment.glsl"));
 
   // Create quadVBO and VAO
   gl::GenVertexArrays(1, &quadVAO);
@@ -69,6 +70,16 @@ GLRenderer::GLRenderer() {
   guiUniforms.tex = guiShader->getUniform("tex");
   guiUniforms.colour = guiShader->getUniform("colour");
 
+  gl::UseProgram(sdfShader->getID());
+
+  sdfUniforms.pos = sdfShader->getUniform("pos");
+  sdfUniforms.scale = sdfShader->getUniform("scale");
+  sdfUniforms.colour = sdfShader->getUniform("colour");
+  sdfUniforms.spread = sdfShader->getUniform("spread");
+  sdfUniforms.sdfTexture = sdfShader->getUniform("sdfTexture");
+  sdfUniforms.character = sdfShader->getUniform("character");
+  sdfUniforms.charScale = sdfShader->getUniform("charScale");
+
 }
 
 void GLRenderer::setRenderDimensions(int width, int height) {
@@ -85,6 +96,25 @@ void GLRenderer::clearDepth() {
   gl::Clear(gl::DEPTH_BUFFER_BIT);
 }
 
+
+void GLRenderer::convertScreenDim(glm::vec2 &pos, glm::vec2 &scale) {
+  if(pos.x < 0) {
+    pos.x = dimensions.x + pos.x;
+  }
+  if(pos.y < 0) {
+    pos.y = dimensions.y + pos.y;
+  }
+
+  scale.x = scale.x/dimensions.x;
+  scale.y = scale.y/dimensions.y;
+
+  pos.x = pos.x/dimensions.x;
+  pos.y = pos.y/dimensions.y;
+
+  pos.x = remap(pos.x, 0, 1, -1, 1);
+  pos.y = -remap(pos.y, 0, 1, -1, 1);
+}
+
 void GLRenderer::drawBox(Box &box) {
   if(currentProgram != guiShader->getID()) {
     gl::UseProgram(guiShader->getID());
@@ -93,22 +123,9 @@ void GLRenderer::drawBox(Box &box) {
   glm::vec2 pos = box.getPosition();
   glm::vec2 size = box.getSize();
   glm::vec2 tPos = pos; // Translated position to OpenGL screen space
-  glm::vec2 tScale;
-  if(pos.x < 0) {
-    tPos.x = dimensions.x + pos.x;
-  }
-  if(pos.y < 0) {
-    tPos.y = dimensions.y + pos.y;
-  }
+  glm::vec2 tScale = size;
 
-  tScale.x = size.x/dimensions.x;
-  tScale.y = size.y/dimensions.y;
-
-  tPos.x = tPos.x/dimensions.x;
-  tPos.y = tPos.y/dimensions.y;
-
-  tPos.x = remap(tPos.x, 0, 1, -1, 1);
-  tPos.y = -remap(tPos.y, 0, 1, -1, 1);
+  convertScreenDim(tPos, tScale);
 
   gl::BindVertexArray(quadVAO);
   GLTexture *texture = static_cast<GLTexture*>(box.getTexture());
@@ -121,7 +138,44 @@ void GLRenderer::drawBox(Box &box) {
   gl::DrawArrays(gl::TRIANGLES, 0, 6);
 }
 
-void GLRenderer::drawString(Font &font, const string &text) {
+void GLRenderer::drawString(Font &font, Text &text, glm::vec2 pos) {
+  if(currentProgram != sdfShader->getID()) {
+    gl::UseProgram(sdfShader->getID());
+    currentProgram = sdfShader->getID();
+  }
+  gl::BindVertexArray(quadVAO);
+
+  int glyphWidth = font.getWidth();
+  int glyphHeight = font.getHeight();
+  int padding = font.getPadding();
+
+  int charWidth = glyphWidth - font.getPadding()*2;
+
+  GLTexture *texture = static_cast<GLTexture*>(font.getTexture().get());
+  glm::vec2 charScale((float)glyphWidth/texture->getWidth(), (float)glyphHeight/texture->getHeight());
+
+  gl::BindTexture(gl::TEXTURE_2D, texture->getId());
+  gl::Uniform1i(sdfUniforms.sdfTexture, 0);
+  gl::Uniform1f(sdfUniforms.spread, font.getSpread());
+  gl::Uniform2fv(sdfUniforms.charScale, 1, &charScale[0]);
+  gl::Uniform4fv(sdfUniforms.colour, 1, &text.colour[0]);
+
+  for(size_t i=0; i < text.text.size(); ++i) {
+    char c = text.text.at(i) - '!';
+    if(c < 0) {
+      continue;
+    }
+    glm::vec2 tPos = pos + glm::vec2(padding) + glm::vec2(charWidth*i,0);
+    glm::vec2 tScale(glyphWidth, glyphHeight);
+
+    convertScreenDim(tPos, tScale);
+
+    gl::Uniform1f(sdfUniforms.character, c);
+    gl::Uniform2fv(sdfUniforms.pos, 1, &tPos[0]);
+    gl::Uniform2fv(sdfUniforms.scale, 1, &tScale[0]);
+
+    gl::DrawArrays(gl::TRIANGLES, 0, 6);
+  }
 }
 
 Texture *GLRenderer::createTexture(Image &image) {
@@ -140,6 +194,6 @@ Texture *GLRenderer::createTexture(Image &image) {
       gl::UNSIGNED_BYTE,
       image.getData());
 
-  return new GLTexture(textureId);
+  return new GLTexture(textureId, image.getWidth(), image.getHeight());
 }
 

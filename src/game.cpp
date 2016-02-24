@@ -45,6 +45,9 @@ Game::~Game() {
 void Game::run() {
   Box box(renderer->getBlankTexture(), glm::vec2(100,100),glm::vec2(100,100),glm::vec4(1.0,0.0,0.0,1.0));
   shared_ptr<Font> f = loader.loadFont("defaultfont.fnt");
+  Text t;
+  t.text = "Hello World!";
+  t.colour = glm::vec4(1.0, 1.0, 1.0, 1.0);
   while(running) {
     input->processInput();
     if(input->getQuit()) {
@@ -56,6 +59,7 @@ void Game::run() {
     renderer->clearColour();
     renderer->clearDepth();
     renderer->drawBox(box);
+    renderer->drawString(*f, t, glm::vec2(0,0));
 
     window->display();
   }

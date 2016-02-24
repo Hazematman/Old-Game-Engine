@@ -8,7 +8,13 @@
  */
 class Texture {
   public:
+    Texture(int width, int height);
     virtual ~Texture() = 0;
+
+    int getWidth();
+    int getHeight();
+  protected:
+    int width,height;
 };
 
 #endif

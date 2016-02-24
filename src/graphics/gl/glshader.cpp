@@ -64,6 +64,9 @@ GLuint ShaderProgram::compileShader(const string &file, GLenum type) {
 
 string ShaderProgram::loadFile(const string &filename) {
   ifstream file(filename);
+  if(file.is_open() == false) {
+    throw Error(SHADER_ERROR, "Cannot open file "+filename);
+  }
   return string(istreambuf_iterator<char>(file),
                 istreambuf_iterator<char>());
 }

@@ -7,7 +7,7 @@
  */
 class GLTexture : public Texture {
   public:
-    GLTexture(GLuint id);
+    GLTexture(GLuint id, int width, int height);
 
     GLuint getId();
   private:

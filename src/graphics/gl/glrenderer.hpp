@@ -7,6 +7,10 @@ struct GuiUniforms {
   GLint pos,scale,tex,colour;
 };
 
+struct SdfUniforms {
+  GLint pos,scale,sdfTexture,colour,spread,character,charScale;
+};
+
 class GLRenderer : public Renderer {
   public:
     GLRenderer();
@@ -17,17 +21,20 @@ class GLRenderer : public Renderer {
      */
     Texture *createTexture(Image &image);
     void drawBox(Box &box);
-    void drawString(Font &font, const std::string &text);
+    void drawString(Font &font, Text &text, glm::vec2 pos);
     void setRenderDimensions(int width, int height);
     void clearColour();
     void clearDepth();
   private:
+    void convertScreenDim(glm::vec2 &pos, glm::vec2 &scale);
     std::unique_ptr<ShaderProgram> guiShader;
+    std::unique_ptr<ShaderProgram> sdfShader;
     glm::vec2 dimensions;
     GLuint currentProgram;
     GLuint quadVBO;
     GLuint quadVAO;
     GuiUniforms guiUniforms;
+    SdfUniforms sdfUniforms;
 };
 
 #endif
