@@ -77,7 +77,7 @@ GLRenderer::GLRenderer() {
   sdfUniforms.spread = sdfShader->getUniform("spread");
   sdfUniforms.sdfTexture = sdfShader->getUniform("sdfTexture");
   sdfUniforms.character = sdfShader->getUniform("character");
-  sdfUniforms.charScale = sdfShader->getUniform("charScale");
+  sdfUniforms.glyphScale = sdfShader->getUniform("glyphScale");
 
 }
 
@@ -164,7 +164,7 @@ void GLRenderer::drawString(Font &font, Text &text, glm::vec2 pos) {
   gl::BindTexture(gl::TEXTURE_2D, texture->getId());
   gl::Uniform1i(sdfUniforms.sdfTexture, 0);
   gl::Uniform1f(sdfUniforms.spread, font.getSpread());
-  gl::Uniform2fv(sdfUniforms.charScale, 1, &charScale[0]);
+  gl::Uniform2fv(sdfUniforms.glyphScale, 1, &charScale[0]);
   gl::Uniform4fv(sdfUniforms.colour, 1, &text.colour[0]);
 
   for(size_t i=0; i < text.text.size(); ++i) {

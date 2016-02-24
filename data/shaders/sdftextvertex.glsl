@@ -5,15 +5,15 @@ smooth out vec2 uv;
 
 uniform vec2 pos;
 uniform vec2 scale;
-uniform vec2 charScale;
+uniform vec2 glyphScale;
 uniform float character;
 
 const float numXChars = 9;
 const float numYChars = 10;
 
 void main() {
-	vec2 offset = ((coord2d+1.0)/2.0)*charScale;
-	uv.x = offset.x + charScale.x*(mod(character,numXChars));
-	uv.y = offset.y + 1 - charScale.y*(floor(character/numXChars)+1);
+	vec2 offset = ((coord2d+1.0)/2.0)*glyphScale;
+	uv.x = offset.x + glyphScale.x*(mod(character,numXChars));
+	uv.y = offset.y + 1 - glyphScale.y*(floor(character/numXChars)+1);
 	gl_Position = vec4((coord2d*scale)+pos,0.0,1.0);
 }
