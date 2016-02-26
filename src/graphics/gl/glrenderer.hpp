@@ -8,7 +8,8 @@ struct GuiUniforms {
 };
 
 struct SdfUniforms {
-  GLint pos,scale,sdfTexture,colour,spread,character,glyphScale;
+  GLint pos,scale,sdfTexture,colour,spread,character,glyphScale,
+        scaleFactor;
 };
 
 class GLRenderer : public Renderer {

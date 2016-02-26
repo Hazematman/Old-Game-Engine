@@ -78,6 +78,7 @@ GLRenderer::GLRenderer() {
   sdfUniforms.sdfTexture = sdfShader->getUniform("sdfTexture");
   sdfUniforms.character = sdfShader->getUniform("character");
   sdfUniforms.glyphScale = sdfShader->getUniform("glyphScale");
+  sdfUniforms.scaleFactor = sdfShader->getUniform("scaleFactor");
 
 }
 
@@ -105,12 +106,12 @@ void GLRenderer::clearDepth() {
 
 
 void GLRenderer::convertScreenDim(glm::vec2 &pos, glm::vec2 &scale) {
-  if(pos.x < 0) {
+  /*if(pos.x < 0) {
     pos.x = dimensions.x + pos.x;
   }
   if(pos.y < 0) {
     pos.y = dimensions.y + pos.y;
-  }
+  }*/
 
   scale.x = scale.x/dimensions.x;
   scale.y = scale.y/dimensions.y;
@@ -118,8 +119,8 @@ void GLRenderer::convertScreenDim(glm::vec2 &pos, glm::vec2 &scale) {
   pos.x = pos.x/dimensions.x;
   pos.y = pos.y/dimensions.y;
 
-  pos.x = remap(pos.x, 0, 1, -1, 1);
-  pos.y = -remap(pos.y, 0, 1, -1, 1);
+  pos.x = remap(pos.x, 0, 1, -1, 1) + scale.x;
+  pos.y = -(remap(pos.y, 0, 1, -1, 1) + scale.y);
 }
 
 void GLRenderer::drawBox(Box &box) {
@@ -133,7 +134,7 @@ void GLRenderer::drawBox(Box &box) {
   glm::vec2 tScale = size;
 
   convertScreenDim(tPos, tScale);
-
+  
   gl::BindVertexArray(quadVAO);
   GLTexture *texture = static_cast<GLTexture*>(box.getTexture());
   gl::BindTexture(gl::TEXTURE_2D, texture->getId());
@@ -157,6 +158,8 @@ void GLRenderer::drawString(Font &font, Text &text, glm::vec2 pos) {
   int padding = font.getPadding();
 
   int charWidth = glyphWidth - font.getPadding()*2;
+  int charHeight = glyphHeight - font.getPadding()*2;
+  float scaleFactor = (float) text.size / charHeight;
 
   GLTexture *texture = static_cast<GLTexture*>(font.getTexture().get());
   glm::vec2 charScale((float)glyphWidth/texture->getWidth(), (float)glyphHeight/texture->getHeight());
@@ -164,6 +167,7 @@ void GLRenderer::drawString(Font &font, Text &text, glm::vec2 pos) {
   gl::BindTexture(gl::TEXTURE_2D, texture->getId());
   gl::Uniform1i(sdfUniforms.sdfTexture, 0);
   gl::Uniform1f(sdfUniforms.spread, font.getSpread());
+  gl::Uniform1f(sdfUniforms.scaleFactor, scaleFactor);
   gl::Uniform2fv(sdfUniforms.glyphScale, 1, &charScale[0]);
   gl::Uniform4fv(sdfUniforms.colour, 1, &text.colour[0]);
 
@@ -172,8 +176,8 @@ void GLRenderer::drawString(Font &font, Text &text, glm::vec2 pos) {
     if(c < 0) {
       continue;
     }
-    glm::vec2 tPos = pos + glm::vec2(padding) + glm::vec2(charWidth*i,0);
-    glm::vec2 tScale(glyphWidth, glyphHeight);
+    glm::vec2 tPos = pos - glm::vec2(padding*scaleFactor)+ glm::vec2(charWidth*i*scaleFactor,0);
+    glm::vec2 tScale(glyphWidth*scaleFactor, glyphHeight*scaleFactor);
 
     convertScreenDim(tPos, tScale);
 

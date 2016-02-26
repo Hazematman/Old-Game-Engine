@@ -25,6 +25,7 @@ class Font {
 struct Text {
   std::string text;
   glm::vec4 colour;
+  float size;
 };
 
 #endif
