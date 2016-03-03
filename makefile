@@ -25,7 +25,7 @@ RLINK_FLAGS =
 DLINK_FLAGS =
 # Static Libraries
 STATIC_LIBS_DIR = -L wren/lib
-STATIC_LIBS_FLAGS = -l:libwren.a
+STATIC_LIBS_FLAGS = -l:libwrend.a
 # Destination directory, like a jail or mounted system
 DESTDIR = /
 # Install path (bin/ is appended automatically)

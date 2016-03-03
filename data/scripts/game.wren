@@ -11,10 +11,10 @@ class Game {
   static onKeyUp(key) {
   }
 
-  static onMouseButtonDown(button) {
+  static onMouseButtonDown(button, x, y) {
   }
 
-  static onMouseButtonUp(button) {
+  static onMouseButtonUp(button, x , y) {
   }
 
   static onMouseMoved(x, y, dx, dy) {

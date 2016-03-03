@@ -26,46 +26,44 @@ void SDLInput::processInput() {
             focus = false;
             break;
           case SDL_WINDOWEVENT_RESIZED:
-            if(resizeCallback) {
-              resizeCallback(e.window.data1, e.window.data2);
+            for(auto it=resizeCallback.begin(); it != resizeCallback.end(); ++it) {
+              (*it)(e.window.data1, e.window.data2);
             }
             break;
         }
         break;
       case SDL_TEXTINPUT:
+        for(auto it=keyInputCallback.begin(); it != keyInputCallback.end(); ++it) {
+          (*it)(string(e.text.text));
+        }
         addInput(string(e.text.text));
         break;
       case SDL_KEYDOWN:
-        if(keyDownCallback) {
+        for(auto it=keyDownCallback.begin(); it != keyDownCallback.end(); ++it) {
           string key = SDL_GetKeyName(e.key.keysym.sym);
-          keyDownCallback(key);
-        }
-        switch(e.key.keysym.sym) {
-          case SDLK_BACKSPACE:
-            addInput("\b");
-            break;
+          (*it)(key);
         }
         break;
       case SDL_KEYUP:
-        if(keyUpCallback) {
+        for(auto it=keyUpCallback.begin(); it != keyUpCallback.end(); ++it) {
           string key = SDL_GetKeyName(e.key.keysym.sym);
-          keyUpCallback(key);
+          (*it)(key);
         }
         break;
       case SDL_MOUSEMOTION:
-        if(mouseMovedCallback) {
-          mouseMovedCallback(e.motion.x, e.motion.y, e.motion.xrel, e.motion.yrel);
+        for(auto it=mouseMovedCallback.begin(); it != mouseMovedCallback.end(); ++it) {
+          (*it)(e.motion.x, e.motion.y, e.motion.xrel, e.motion.yrel);
         }
         break;
       case SDL_MOUSEBUTTONUP:
-        if(mouseButtonUpCallback) {
-          mouseButtonUpCallback((MouseButton)e.button.button, 
+        for(auto it=mouseButtonUpCallback.begin(); it != mouseButtonUpCallback.end(); ++it) {
+          (*it)((MouseButton)e.button.button, 
               e.button.x, e.button.y);
         }
         break;
       case SDL_MOUSEBUTTONDOWN:
-        if(mouseButtonDownCallback) {
-          mouseButtonDownCallback((MouseButton)e.button.button,
+        for(auto it=mouseButtonDownCallback.end(); it != mouseButtonDownCallback.end(); ++it) {
+          (*it)((MouseButton)e.button.button,
               e.button.x, e.button.y);
         }
         break;
@@ -73,28 +71,32 @@ void SDLInput::processInput() {
   }
 }
 
-void SDLInput::setKeyDownCallback(function<void(string&)> callback) {
-  keyDownCallback = callback;
+void SDLInput::setKeyDownCallback(function<void(const string&)> callback) {
+  keyDownCallback.push_back(callback);
 }
 
-void SDLInput::setKeyUpCallback(function<void(string&)> callback) {
-  keyUpCallback = callback;
+void SDLInput::setKeyUpCallback(function<void(const string&)> callback) {
+  keyUpCallback.push_back(callback);
+}
+
+void SDLInput::setKeyInputCallback(function<void(const string&)> callback) {
+  keyInputCallback.push_back(callback);
 }
 
 void SDLInput::setMouseMovedCallback(function<void(int,int,int,int)> callback) {
-  mouseMovedCallback = callback;
+  mouseMovedCallback.push_back(callback);
 }
 
 void SDLInput::setMouseButtonUpCallback(function<void(MouseButton,int,int)> callback) {
-  mouseButtonUpCallback = callback;
+  mouseButtonUpCallback.push_back(callback);
 }
 
 void SDLInput::setMouseButtonDownCallback(function<void(MouseButton,int,int)> callback) {
-  mouseButtonDownCallback = callback;
+  mouseButtonDownCallback.push_back(callback);
 }
 
 void SDLInput::setResizeCallback(function<void(int,int)> callback) {
-  resizeCallback = callback;
+  resizeCallback.push_back(callback);
 }
 
 void SDLInput::setGUILock(bool gui) {
@@ -150,7 +152,7 @@ bool SDLInput::getQuit() {
   return quit;
 }
 
-void SDLInput::addInput(string newInput) {
+void SDLInput::addInput(const string &newInput) {
   if(input.size() > MAX_INPUT_SIZE) {
     input = "";
   }

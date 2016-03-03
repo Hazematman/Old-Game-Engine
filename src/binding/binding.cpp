@@ -63,8 +63,7 @@ void bindingInit() {
 
   wrenInterpret(vm, "import \"core\"");
 
-  game.game = getValue(vm, "game", "Game");
-
+  /*
   game.init = wrenMakeCallHandle(vm, "init()");
   game.run = wrenMakeCallHandle(vm, "run(_)");
   game.onKeyUp = wrenMakeCallHandle(vm, "onKeyDown(_)");
@@ -72,16 +71,10 @@ void bindingInit() {
   game.onMouseButtonUp = wrenMakeCallHandle(vm, "onMouseButtonUp(_)");
   game.onMouseButtonDown = wrenMakeCallHandle(vm, "onMouseButtonDown(_)");
   game.onMouseMoved = wrenMakeCallHandle(vm, "onMouseMoved(_,_,_,_)");
+  */
 }
 
 void bindingFree() {
-  if(game.run != nullptr) {
-    wrenReleaseValue(vm, game.run);
-  }
-  if(game.init != nullptr) {
-    wrenReleaseValue(vm, game.init);
-  }
-
   wrenFreeVM(vm);
 }
 
@@ -108,55 +101,89 @@ void logText(WrenVM *vm, const char *text) {
 }
 
 void callInit() {
+  game.game = getValue(vm, "game", "Game");
+  game.init = wrenMakeCallHandle(vm, "init()");
   wrenEnsureSlots(vm, 1);
   wrenSetSlotValue(vm, 0, game.game);
   wrenCall(vm, game.init);
+  wrenReleaseValue(vm, game.game);
+  wrenReleaseValue(vm, game.init);
 }
 
 void callRun(float dt) {
+  game.game = getValue(vm, "game", "Game");
+  game.run = wrenMakeCallHandle(vm, "run(_)");
   wrenEnsureSlots(vm, 2);
   wrenSetSlotValue(vm, 0, game.game);
   wrenSetSlotDouble(vm, 1, dt);
   wrenCall(vm, game.run);
+  wrenReleaseValue(vm, game.game);
+  wrenReleaseValue(vm, game.run);
 }
 
 void setLogFunction(function<void(string)> callback) {
   logFunction = callback;
 }
 
-void keyUpCallback(string &key) {
+void runString(const string &code) {
+  string newCode = "import \"game\" for Game\n" + code;
+  wrenInterpret(vm, newCode.c_str());
+}
+
+void keyUpCallback(const string &key) {
+  game.game = getValue(vm, "game", "Game");
+  game.onKeyUp = wrenMakeCallHandle(vm, "onKeyUp(_)");
   wrenEnsureSlots(vm, 2);
   wrenSetSlotValue(vm, 0, game.game);
   wrenSetSlotString(vm, 1, key.c_str());
   wrenCall(vm, game.onKeyUp);
+  wrenReleaseValue(vm, game.game);
+  wrenReleaseValue(vm, game.onKeyUp);
 }
 
-void keyDownCallback(string &key) {
+void keyDownCallback(const string &key) {
+  if(key == "Return") {
+    cout << key << endl;
+  }
+  game.game = getValue(vm, "game", "Game");
+  game.onKeyDown = wrenMakeCallHandle(vm, "onKeyDown(_)");
   wrenEnsureSlots(vm, 2);
   wrenSetSlotValue(vm, 0, game.game);
   wrenSetSlotString(vm, 1, key.c_str());
   wrenCall(vm, game.onKeyDown);
+  wrenReleaseValue(vm, game.game);
+  wrenReleaseValue(vm, game.onKeyDown);
 }
 
 void mouseUpCallback(MouseButton button, int x, int y) {
+  game.game = getValue(vm, "game", "Game");
+  game.onMouseButtonUp = wrenMakeCallHandle(vm, "onMouseButtonUp(_,_,_)");
   wrenEnsureSlots(vm, 4);
   wrenSetSlotValue(vm, 0, game.game);
   wrenSetSlotDouble(vm, 1, button);
   wrenSetSlotDouble(vm, 2, x);
   wrenSetSlotDouble(vm, 3, y);
   wrenCall(vm, game.onMouseButtonUp);
+  wrenReleaseValue(vm, game.game);
+  wrenReleaseValue(vm, game.onMouseButtonUp);
 }
 
 void mouseDownCallback(MouseButton button, int x, int y) {
+  game.game = getValue(vm, "game", "Game");
+  game.onMouseButtonDown = wrenMakeCallHandle(vm, "onMouseButtonDown(_,_,_)");
   wrenEnsureSlots(vm, 4);
   wrenSetSlotValue(vm, 0, game.game);
   wrenSetSlotDouble(vm, 1, button);
   wrenSetSlotDouble(vm, 2, x);
   wrenSetSlotDouble(vm, 3, y);
   wrenCall(vm, game.onMouseButtonDown);
+  wrenReleaseValue(vm, game.game);
+  wrenReleaseValue(vm, game.onMouseButtonDown);
 }
 
 void mouseMovedCallback(int x, int y, int dx, int dy) {
+  game.game = getValue(vm, "game", "Game");
+  game.onMouseMoved = wrenMakeCallHandle(vm, "onMouseMoved(_,_,_,_)");
   wrenEnsureSlots(vm, 5);
   wrenSetSlotValue(vm, 0, game.game);
   wrenSetSlotDouble(vm, 1, x);
@@ -164,5 +191,7 @@ void mouseMovedCallback(int x, int y, int dx, int dy) {
   wrenSetSlotDouble(vm, 3, dx);
   wrenSetSlotDouble(vm, 4, dy);
   wrenCall(vm, game.onMouseMoved);
+  wrenReleaseValue(vm, game.game);
+  wrenReleaseValue(vm, game.onMouseMoved);
 }
 

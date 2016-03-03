@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <string>
 #include <functional>
+#include <vector>
 
 enum MouseButton {
   MOUSE_LEFT = 1,
@@ -27,8 +28,9 @@ class SDLInput {
     /* Set callback functions for when mouse
      * and keyboard events are generated.
      */
-    void setKeyDownCallback(std::function<void(std::string&)> callback);
-    void setKeyUpCallback(std::function<void(std::string&)> callback);
+    void setKeyDownCallback(std::function<void(const std::string&)> callback);
+    void setKeyUpCallback(std::function<void(const std::string&)> callback);
+    void setKeyInputCallback(std::function<void(const std::string&)> callback);
     void setMouseMovedCallback(std::function<void(int,int,int,int)> callback);
     void setMouseButtonUpCallback(std::function<void(MouseButton,int,int)> callback);
     void setMouseButtonDownCallback(std::function<void(MouseButton,int,int)> callback);
@@ -52,14 +54,15 @@ class SDLInput {
     bool focus;
     bool gui;
     std::string input;
-    std::function<void(std::string&)> keyUpCallback;
-    std::function<void(std::string&)> keyDownCallback;
-    std::function<void(int,int,int,int)> mouseMovedCallback;
-    std::function<void(MouseButton,int,int)> mouseButtonUpCallback;
-    std::function<void(MouseButton,int,int)> mouseButtonDownCallback;
-    std::function<void(int,int)> resizeCallback;
+    std::vector<std::function<void(const std::string&)>> keyUpCallback;
+    std::vector<std::function<void(const std::string&)>> keyDownCallback;
+    std::vector<std::function<void(const std::string&)>> keyInputCallback;
+    std::vector<std::function<void(int,int,int,int)>> mouseMovedCallback;
+    std::vector<std::function<void(MouseButton,int,int)>> mouseButtonUpCallback;
+    std::vector<std::function<void(MouseButton,int,int)>> mouseButtonDownCallback;
+    std::vector<std::function<void(int,int)>> resizeCallback;
 
-    void addInput(std::string newInput);
+    void addInput(const std::string &newInput);
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "game.hpp"
 #include "window/sdl/sdlwindow.hpp"
 #include "graphics/gl/glrenderer.hpp"
@@ -24,6 +25,12 @@ Game::Game() :
   settings.windowWidth = DEFAULT_WINDOW_WIDTH;
   settings.windowHeight = DEFAULT_WINDOW_HEIGHT;
 
+  defaultFont = loader.loadFont("defaultfont.fnt");
+  console.reset(new Console(renderer, input, defaultFont,
+        glm::vec4(0.2,0.2,0.2,1.0), glm::vec4(0.4,0.4,0.4,1.0), glm::vec4(0.8,0.8,0.8,1.0)));
+  console->setRunCallback(runString);
+  setLogFunction(bind(&Console::print, console.get(), placeholders::_1));
+
   input->setKeyDownCallback(keyDownCallback);
   input->setKeyUpCallback(keyUpCallback);
   input->setMouseButtonDownCallback(mouseDownCallback);
@@ -45,15 +52,13 @@ Game::~Game() {
 
 void Game::run() {
   Box box(renderer->getBlankTexture(), glm::vec2(100,100),glm::vec2(100,100),glm::vec4(1.0,0.0,0.0,1.0));
-  shared_ptr<Font> f = loader.loadFont("defaultfont.fnt");
-  Console console(renderer, f, glm::vec4(0.2,0.2,0.2,1.0), glm::vec4(0.4,0.4,0.4,1.0), glm::vec4(0.8,0.8,0.8,1.0));
   while(running) {
     input->processInput();
     if(input->getQuit()) {
       running = false;
     }
 
-    callRun(0);    
+    //callRun(0);    
 
     renderer->clearColour();
     renderer->clearDepth();
@@ -61,7 +66,7 @@ void Game::run() {
     renderer->setDepthTest(false);
     renderer->drawBox(box);
 
-    console.draw();
+    console->draw();
 
     window->display();
   }
