@@ -16,7 +16,7 @@ RCOMPILE_FLAGS = -D NDEBUG
 # Additional debug-specific flags
 DCOMPILE_FLAGS = -D DEBUG
 # Add additional include paths
-INCLUDES = -I $(SRC_PATH)/ -I ./wren/src/include -I ./json/src
+INCLUDES = -I $(SRC_PATH)/ -I ./lua-5.3.2/src/ -I ./json/src
 # General linker settings
 LINK_FLAGS = -lSDL2 -lSDL2_image -lGL
 # Additional release-specific linker settings
@@ -24,8 +24,10 @@ RLINK_FLAGS =
 # Additional debug-specific linker settings
 DLINK_FLAGS =
 # Static Libraries
-STATIC_LIBS_DIR = -L wren/lib
-STATIC_LIBS_FLAGS = -l:libwrend.a
+STATIC_LIBS_DIR = -L lua-5.3.2/src
+STATIC_LIBS_FLAGS = -l:liblua.a
+# Platform 
+PLATFORM = linux
 # Destination directory, like a jail or mounted system
 DESTDIR = /
 # Install path (bin/ is appended automatically)
@@ -195,7 +197,7 @@ clean:
 	@$(RM) -r build
 	@$(RM) -r bin
 	@echo "Clearing libwren"
-	$(MAKE) -C wren clean
+	$(MAKE) -C lua-5.3.2 clean
 
 # Main rule, checks the executable and symlinks to the output
 all: $(BIN_PATH)/$(BIN_NAME)
@@ -204,7 +206,7 @@ all: $(BIN_PATH)/$(BIN_NAME)
 	@ln -s $(BIN_PATH)/$(BIN_NAME) $(BIN_NAME)
 
 # Link the executable
-$(BIN_PATH)/$(BIN_NAME): $(OBJECTS) ./wren/lib/libwren.a
+$(BIN_PATH)/$(BIN_NAME): $(OBJECTS) ./lua-5.3.2/src/liblua.a
 	@echo "Linking: $@"
 	@$(START_TIME)
 	$(CMD_PREFIX)$(CXX) $(OBJECTS) $(STATIC_LIBS_DIR) $(LDFLAGS) $(STATIC_LIBS_FLAGS) -o $@
@@ -225,6 +227,6 @@ $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
 	@$(END_TIME)
 
 # build libwren
-wren/lib/libwren.a:
+lua-5.3.2/src/liblua.a:
 	@echo "Building libwren"
-	$(MAKE) -C wren release
+	$(MAKE) -C lua-5.3.2 $(PLATFORM)

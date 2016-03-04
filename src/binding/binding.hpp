@@ -3,16 +3,11 @@
 #include <functional>
 #include <string>
 #include "../input/sdlinput.hpp"
-extern "C" {
-#include "wren.h"
-}
+#include "lua.hpp"
 
 void bindingInit();
 void bindingFree();
-char *loadModule(WrenVM *vm, const char *name);
-void logText(WrenVM *vm, const char *text);
-WrenForeignMethodFn foreignMethod(WrenVM *vm, const char *module, const char *className, bool isStatic, const char *signature);
-WrenForeignClassMethods foreignClass(WrenVM *vm, const char *module, const char *className);
+void logText(const char *text);
 
 void callInit();
 void callRun(float dt);
