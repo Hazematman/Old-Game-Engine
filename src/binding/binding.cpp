@@ -53,14 +53,26 @@ void logText(const char *text) {
 }
 
 void callInit() {
-  lua_getglobal(lua, "init");
-  if(lua_pcall(lua, 0, 0, 0)) {
-    logText(lua_tostring(lua, -1));
-    lua_pop(lua ,-1);
+  if(lua_getglobal(lua, "init")) {
+    if(lua_pcall(lua, 0, 0, 0)) {
+      logText(lua_tostring(lua, -1));
+      lua_pop(lua ,-1);
+    }
+  } else {
+    lua_pop(lua, 1);
   }
 }
 
 void callRun(float dt) {
+  if(lua_getglobal(lua, "run")) {
+    lua_pushnumber(lua, dt);
+    if(lua_pcall(lua, 1, 0, 0)) {
+      logText(lua_tostring(lua, -1));
+      lua_pop(lua, -1);
+    }
+  } else {
+    lua_pop(lua, 1);
+  }
 }
 
 void setLogFunction(function<void(string)> callback) {
@@ -75,17 +87,69 @@ void runString(const string &code) {
 }
 
 void keyUpCallback(const string &key) {
+  if(lua_getglobal(lua, "onKeyUp")) {
+    lua_pushstring(lua, key.c_str());
+    if(lua_pcall(lua, 1, 0, 0)) {
+      logText(lua_tostring(lua, -1));
+      lua_pop(lua, -1);
+    }
+  } else {
+    lua_pop(lua, 1);
+  }
 }
 
 void keyDownCallback(const string &key) {
+  if(lua_getglobal(lua, "onKeyDown")) {
+    lua_pushstring(lua, key.c_str());
+    if(lua_pcall(lua, 1, 0, 0)) {
+      logText(lua_tostring(lua, -1));
+      lua_pop(lua, -1);
+    }
+  } else {
+    lua_pop(lua, 1);
+  }
 }
 
 void mouseUpCallback(MouseButton button, int x, int y) {
+  if(lua_getglobal(lua, "onMouseUp")) {
+    lua_pushnumber(lua, button);
+    lua_pushnumber(lua, x);
+    lua_pushnumber(lua, y);
+    if(lua_pcall(lua, 3, 0, 0)) {
+      logText(lua_tostring(lua, -1));
+      lua_pop(lua, -1);
+    }
+  } else {
+    lua_pop(lua, 1);
+  }
 }
 
 void mouseDownCallback(MouseButton button, int x, int y) {
+  if(lua_getglobal(lua, "onMouseDown")) {
+    lua_pushnumber(lua, button);
+    lua_pushnumber(lua, x);
+    lua_pushnumber(lua, y);
+    if(lua_pcall(lua, 3, 0, 0)) {
+      logText(lua_tostring(lua, -1));
+      lua_pop(lua, -1);
+    }
+  } else {
+    lua_pop(lua, 1);
+  }
 }
 
 void mouseMovedCallback(int x, int y, int dx, int dy) {
+  if(lua_getglobal(lua, "onMouseMoved")) {
+    lua_pushnumber(lua, x);
+    lua_pushnumber(lua, y);
+    lua_pushnumber(lua, dx);
+    lua_pushnumber(lua, dy);
+    if(lua_pcall(lua, 3, 0, 0)) {
+      logText(lua_tostring(lua, -1));
+      lua_pop(lua, -1);
+    }
+  } else {
+    lua_pop(lua, 1);
+  }
 }
 

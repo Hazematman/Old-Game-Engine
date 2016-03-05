@@ -31,6 +31,8 @@ class Console {
     std::list<std::string> lines;
     Box fgBox;
     Box bgBox;
+    Box cursor;
+
     std::function<void(const std::string&)> runCallback;
 };
 
