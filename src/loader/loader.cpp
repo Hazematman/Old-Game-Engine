@@ -12,6 +12,7 @@ using json = nlohmann::json;
 #define BASE_DIR "./data/"
 #define TEXTURE_DIR "textures/"
 #define FONT_DIR "fonts/"
+#define MODEL_DIR "models/"
 
 Loader::Loader(shared_ptr<Renderer> renderer) : renderer(renderer) {}
 
@@ -87,4 +88,12 @@ shared_ptr<Font> Loader::loadFont(const string &name) {
   
   fonts[name] = font;
   return font;
+}
+
+shared_ptr<ModelData> Loader::loadModelData(const std::string &name) {
+  string file = BASE_DIR MODEL_DIR + name;
+  auto it = models.find(file);
+  if(it != models.end()) {
+    return it->second;
+  }
 }

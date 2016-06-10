@@ -4,16 +4,19 @@
 #include <unordered_map>
 #include "../graphics/texture.hpp"
 #include "../graphics/renderer.hpp"
+#include "../graphics/modeldata.hpp"
 
 class Loader {
   public:
     Loader(std::shared_ptr<Renderer> renderer);
     std::shared_ptr<Texture> loadTexture(const std::string &name);
     std::shared_ptr<Font> loadFont(const std::string &name);
+    std::shared_ptr<ModelData> loadModelData(const std::string &name);
   private:
     std::shared_ptr<Renderer> renderer;
     std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
     std::unordered_map<std::string, std::shared_ptr<Font>> fonts;
+    std::unordered_map<std::string, std::shared_ptr<ModelData>> models;
 };
 
 #endif
